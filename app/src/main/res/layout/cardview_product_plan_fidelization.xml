@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/list_background_pressed"
+            android:padding="@dimen/keyline_1_minus_8dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/text_name"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCodigo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvProductName"
+                    android:background="@color/colorRed"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:paddingRight="@dimen/padding_text"
+                    android:text="@string/text_code"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                >
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/lyCuotaMes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_cuota_mes"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCuotaMes"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingRight="@dimen/padding_text"
+                            android:text="@string/text_cuota_mes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lyAvance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lyCuotaMes"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_avance"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvAvance"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingRight="@dimen/padding_text"
+                            android:text="@string/text_avance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lySaldoVendedor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lyAvance"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_saldo_vendedor"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvSaldoVendedor"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingRight="@dimen/padding_text"
+                            android:text="@string/text_saldo_vendedor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lyStockMinimo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lySaldoVendedor"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_stock_minimo"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvStockMinimo"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingRight="@dimen/padding_text"
+                            android:text="@string/text_stock_minimo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lyStockMaximo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lyStockMinimo"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_stock_maximo"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvStockMaximo"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingRight="@dimen/padding_text"
+                            android:text="@string/text_stock_maximo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/lyMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_stock_minimo"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                        <EditText
+                            android:id="@+id/etMin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:inputType="number"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lyMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lyMin"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_stock_maximo"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                        <EditText
+                            android:id="@+id/etMax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:inputType="number"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+</android.support.v7.widget.CardView>
+
+

@@ -1,0 +1,115 @@
+<android.support.v7.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/list_background_pressed"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_vertical_margin">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="FullName"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCodigo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvProductName"
+                    android:background="@color/colorRed"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:paddingRight="@dimen/padding_text"
+                    android:text="@string/text_code"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/colorWhite" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_prom_6m"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvProm6m"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:paddingRight="@dimen/padding_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_prom_6m"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_cuota_mes"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvCuotaMes"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:paddingRight="@dimen/padding_text"
+                    android:text="@string/text_cuota_mes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_avance"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvAvance"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:paddingRight="@dimen/padding_text"
+                    android:text="@string/text_avance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_pedido_sugerido"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvPedidoSugerido"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:paddingRight="@dimen/padding_text"
+                    android:text="@string/text_avance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</android.support.v7.widget.CardView>
+
