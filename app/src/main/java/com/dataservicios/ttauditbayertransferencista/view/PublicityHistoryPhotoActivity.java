@@ -9,6 +9,7 @@ import com.dataservicios.ttauditbayertransferencista.R;
 import com.dataservicios.ttauditbayertransferencista.db.DatabaseManager;
 import com.dataservicios.ttauditbayertransferencista.model.PublicityHistory;
 import com.dataservicios.ttauditbayertransferencista.repo.PublicityHistoryRepo;
+import com.dataservicios.ttauditbayertransferencista.util.GlobalConstant;
 import com.squareup.picasso.Picasso;
 
 public class PublicityHistoryPhotoActivity extends AppCompatActivity {
@@ -33,12 +34,16 @@ public class PublicityHistoryPhotoActivity extends AppCompatActivity {
         PublicityHistory publicityHistory;
         publicityHistory = (PublicityHistory) publicityHistoryRepo.findById(publicity_history_id);
 
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(publicityHistory.getImagen())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(imgPhoto);
+        Picasso.get()
                 .load(publicityHistory.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)
                 .into(imgPhoto);
-
 
     }
 }

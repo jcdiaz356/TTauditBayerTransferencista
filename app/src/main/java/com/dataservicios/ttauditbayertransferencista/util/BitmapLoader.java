@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import id.zelory.compressor.Compressor;
+
 
 /**
  * Created by Jaime on 21/09/2016.
@@ -125,6 +127,11 @@ public class BitmapLoader {
         return  GlobalConstant.ALBUN_NAME_BACKUP;
     }
 
+//    private static String getDataBaseNameBackup(Context context){
+//        //return  context.getString(R.string.album_name_backup);
+//        return  GlobalConstant.DATA_BASE_NAME_BACKUP;
+//    }
+
     public static File getAlbumDirTemp(Context context) {
 
         AlbumStorageDirFactory mAlbumStorageDirFactory = null;
@@ -224,6 +231,40 @@ public class BitmapLoader {
         return storageDir;
     }
 
+    public static File getDataBaseDirBackup(Context context) {
+
+//        AlbumStorageDirFactory mAlbumStorageDirFactory = null;
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+//            mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
+//        } else {
+//            mAlbumStorageDirFactory = new BaseAlbumDirFactory();
+//        }
+
+
+        File storageDir = null;
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+
+            storageDir = new File(Environment.getExternalStorageDirectory() + "/" + GlobalConstant.DATA_BASE_DIR_NAME_BACKUP ) ;
+//            storageDir = mAlbumStorageDirFactory.getAlbumStorageDir(getAlbunNameBackup(context));
+
+            if (storageDir != null) {
+                if (! storageDir.mkdirs()) {
+                    if (! storageDir.exists()){
+                        Log.d(getAlbunNameBackup(context), "failed to create directory");
+                        return null;
+                    }
+                }
+            }
+
+        } else {
+            Log.v(String.valueOf(R.string.app_name), "External storage is not mounted READ/WRITE.");
+        }
+
+        return storageDir;
+    }
+
     public static void copyFile(String selectedImagePath, String string) throws IOException {
         InputStream in = new FileInputStream(selectedImagePath);
         OutputStream out = new FileOutputStream(string);
@@ -256,5 +297,29 @@ public class BitmapLoader {
             }
 
         }
+    }
+
+//    public static File compresFileDestinationtion(String destinationDirectory, File file, Context context) throws IOException {
+//        File fileCompesor = new Compressor(context)
+//                .setMaxWidth(500)
+//                .setMaxHeight(352)
+//                .setQuality(60)
+//                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+//                .setDestinationDirectoryPath(destinationDirectory )
+//                .compressToFile(file);
+//
+//        return fileCompesor ;
+//    }
+
+    public static File compresFileDestinationtion(String destinationDirectory, File file, Context context) throws IOException {
+        File fileCompesor = new Compressor(context)
+                .setMaxWidth(500)
+                .setMaxHeight(352)
+                .setQuality(60)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                .setDestinationDirectoryPath(destinationDirectory )
+                .compressToFile(file);
+
+        return fileCompesor ;
     }
 }

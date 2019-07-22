@@ -207,15 +207,16 @@ public class PublicitiesActivity extends AppCompatActivity {
                         if(store.getStatus_change() ==1) {
                             finish();
                         } else if(store.getStatus_change() == 0) {
-                            if(store.getType().equals("AASS")) {
-                                new savePoll().execute();
-                            } else {
-                                Poll poll = new Poll();
-                                poll.setPublicity_id(0);
-                                poll.setOrder(28);
-                                PollPublicityActivity.createInstance((Activity) activity, store_id,audit_id,poll);
-                                finish();
-                            }
+                            new savePoll().execute();
+//                            if(store.getType().equals("AASS")) {
+//                                new savePoll().execute();
+//                            } else {
+//                                Poll poll = new Poll();
+//                                poll.setPublicity_id(0);
+//                                poll.setOrder(28);
+//                                PollPublicityActivity.createInstance((Activity) activity, store_id,audit_id,poll);
+//                                finish();
+//                            }
                         }
 
                         dialog.dismiss();
@@ -260,7 +261,7 @@ public class PublicitiesActivity extends AppCompatActivity {
 
             if (!AuditUtil.closeAuditStore(audit_id, store_id, company.getId(), route.getId())) return false;
             if(store.getVisit_id()==1){
-                if (!AuditUtil.sendAlertPlanningPop(company.getId(), store_id,route.getId())) return false;
+               // if (!AuditUtil.sendAlertPlanningPop(company.getId(), store_id,route.getId())) return false;
             }
 
 

@@ -53,11 +53,18 @@ public class PublicityAdapterReciclerView extends RecyclerView.Adapter<Publicity
 
         holder.tvFullName.setText(publicity.getFullname());
         //holder.tvDescription.setText(publicity.getDescription());
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(publicity.getImagen())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
+
+        Picasso.get()
                 .load(publicity.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)
                 .into(holder.imgPhoto);
+
         if(publicity.getStatus() == 0){
             holder.imgStatus.setVisibility(View.INVISIBLE);
             holder.btAudit.setVisibility(View.VISIBLE);

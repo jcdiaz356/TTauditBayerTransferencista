@@ -193,6 +193,7 @@ public class PollPublicityActivity extends AppCompatActivity {
         store               = (Store)           storeRepo.findById(store_id);
         route               = (Route)           routeRepo.findById(store.getRoute_id());
         auditRoadStore      = (AuditRoadStore)  auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
+//        poll                = (Poll)            pollRepo.findByCompanyAuditIdAndOrder(auditRoadStore.getList().getCompany_audit_id(),orderPoll);
         poll                = (Poll)            pollRepo.findByCompanyAuditIdAndOrder(auditRoadStore.getList().getCompany_audit_id(),orderPoll);
         publicity           = (Publicity)       publicityRepo.findById(publicity_id);
 
@@ -306,19 +307,32 @@ public class PollPublicityActivity extends AppCompatActivity {
 
     }
 
+//    private void takePhoto() {
+//
+//        Media media = new Media();
+//        media.setStore_id(store_id);
+//        media.setPoll_id(poll.getId());
+//        media.setCompany_id(company_id);
+//        media.setPublicity_id(publicity_id);
+//        media.setVisit_id(store.getVisit_id());
+//        media.setType(1);
+//        AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
+//    }
+
     private void takePhoto() {
 
-        Media media = new Media();
-        media.setStore_id(store_id);
-        media.setPoll_id(poll.getId());
-        media.setCompany_id(company_id);
-        media.setPublicity_id(publicity_id);
-        media.setVisit_id(store.getVisit_id());
-        media.setType(1);
-        AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
+        Intent intent = new Intent(activity, AndroidCustomGalleryActivity.class);
+        intent.putExtra("store_id"              ,store_id);
+        intent.putExtra("poll_id"               ,poll.getId());
+        intent.putExtra("company_id"            ,company_id);
+        intent.putExtra("publicities_id"        ,publicity_id);
+        intent.putExtra("product_id"            ,product_id);
+        intent.putExtra("category_product_id"   ,category_product_id);
+        intent.putExtra("monto"                 ,"");
+        intent.putExtra("razon_social"          ,"");
+        intent.putExtra("tipo"                  ,1);
+        startActivity(intent);
     }
-
-
     /**
      * Guarda la pregunta
      */
@@ -403,7 +417,7 @@ public class PollPublicityActivity extends AppCompatActivity {
                 break;
             case 28:
                 if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
+//                if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
                 //if (!AuditUtil.sendAlertPlanningPop(company_id, store_id,route.getId())) return false;
                 break;
 
@@ -429,26 +443,29 @@ public class PollPublicityActivity extends AppCompatActivity {
 //                Exception para Vitamina ASS ----------------------
 
                     if(isYesNo==1) {
-                        if(publicity_id==564){
-                            poll.setOrder(24);
-                            PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                        } else if (publicity_id==565){
-                            if(store.getCadenRuc().equals("MIFARMA")) {
-                                poll.setOrder(26);
-                                PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                            } else {
-                                poll.setOrder(25);
-                                PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                            }
-                        }
-                        else if(publicity_id==586 && store.getType().equals("AASS")) {
-                            poll.setOrder(214);
-                            PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//                        if(publicity_id==564){
+//                            poll.setOrder(24);
+//                            PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//                        } else if (publicity_id==565){
+//                            if(store.getCadenRuc().equals("MIFARMA")) {
+//                                poll.setOrder(26);
+//                                PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//                            } else {
+//                                poll.setOrder(25);
+//                                PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//                            }
+//                        }
+//                        else if(publicity_id==586 && store.getType().equals("AASS")) {
+//                            poll.setOrder(214);
+//                            PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//
+//                        }                        else {
+//                            poll.setOrder(26);
+//                            PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//                        }
 
-                        }                        else {
-                            poll.setOrder(26);
-                            PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                        }
+                        poll.setOrder(26);
+                        PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
 
                     } else if(isYesNo==0){
                         publicity.setStatus(1);
@@ -456,26 +473,26 @@ public class PollPublicityActivity extends AppCompatActivity {
 
                     }
 
-                    if(publicity_id==683) {
-                        if (poll.getProduct_id() == 0) {
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("store_id", Integer.valueOf(store_id));
-                            bundle.putInt("audit_id", Integer.valueOf(audit_id));
-                            bundle.putInt("publicity_id", Integer.valueOf(publicity_id));
-                            Intent intent = new Intent(activity, ProductAASSActivity.class);
-                            intent.putExtras(bundle);
-                            activity.startActivity(intent);
-                        } else {
-                            ProductPublicity productPublicity;
-                            ProductPublicityRepo productPublicityRepo = new ProductPublicityRepo(activity);
-                            productPublicity = (ProductPublicity) productPublicityRepo.findById(poll.getProduct_id());
-                            productPublicity.setStatus(1);
-                            productPublicityRepo.update(productPublicity);
-                        }
-                    }
+//                    if(publicity_id==683) {
+//                        if (poll.getProduct_id() == 0) {
+//                            Bundle bundle = new Bundle();
+//                            bundle.putInt("store_id", Integer.valueOf(store_id));
+//                            bundle.putInt("audit_id", Integer.valueOf(audit_id));
+//                            bundle.putInt("publicity_id", Integer.valueOf(publicity_id));
+//                            Intent intent = new Intent(activity, ProductAASSActivity.class);
+//                            intent.putExtras(bundle);
+//                            activity.startActivity(intent);
+//                        } else {
+//                            ProductPublicity productPublicity;
+//                            ProductPublicityRepo productPublicityRepo = new ProductPublicityRepo(activity);
+//                            productPublicity = (ProductPublicity) productPublicityRepo.findById(poll.getProduct_id());
+//                            productPublicity.setStatus(1);
+//                            productPublicityRepo.update(productPublicity);
+//                        }
+//                    }
 
 
-            finish();
+                finish();
                 break;
             case 24:
                 if(store.getCadenRuc().equals("MIFARMA") || store.getCadenRuc().equals("UNIVERSAL_CENTRAL") || store.getCadenRuc().equals("UNIVERSAL_SURCO")  && isYesNo==1){
@@ -518,17 +535,22 @@ public class PollPublicityActivity extends AppCompatActivity {
                 finish();
                 break;
             case 27:
-                if(publicity_id==561) {
-                    poll.setOrder(25);
-                    PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
-                    finish();
-                }
-                else {
-                    publicity.setStatus(1);
-                    publicityRepo.update(publicity);
-                    finish();
-                }
+//                if(publicity_id==561) {
+//                    poll.setOrder(25);
+//                    PollPublicityActivity.createInstance(activity, store_id,audit_id,poll);
+//                    finish();
+//                }
+//                else {
+//                    publicity.setStatus(1);
+//                    publicityRepo.update(publicity);
+//                    finish();
+//                }
+//
+//                break;
 
+                publicity.setStatus(1);
+                publicityRepo.update(publicity);
+                finish();
                 break;
 
             case 212:
@@ -539,9 +561,16 @@ public class PollPublicityActivity extends AppCompatActivity {
             case 28:
 
                 //AuditRoadStore auditRoadStore = (AuditRoadStore) auditRoadStoreRepo.findByStoreIdAndAuditId(store_id,audit_id);
-                AuditRoadStore auditRoadStore = (AuditRoadStore) auditRoadStoreRepo.findByStoreIdAndAuditIdAndVisitId(store_id,audit_id,store.getVisit_id());
-                auditRoadStore.setAuditStatus(1);
-                auditRoadStoreRepo.update(auditRoadStore);
+//                AuditRoadStore auditRoadStore = (AuditRoadStore) auditRoadStoreRepo.findByStoreIdAndAuditIdAndVisitId(store_id,audit_id,store.getVisit_id());
+//                auditRoadStore.setAuditStatus(1);
+//                auditRoadStoreRepo.update(auditRoadStore);
+                Bundle bundle = new Bundle();
+                bundle.putInt("store_id", Integer.valueOf(store_id));
+                bundle.putInt("audit_id", Integer.valueOf(audit_id));
+//                Intent intent = new Intent(activity,PublicitiesActivity.class);
+                Intent intent = new Intent(activity,CompetityActivity.class);
+                intent.putExtras(bundle);
+                activity.startActivity(intent);
                 finish();
                 break;
         }

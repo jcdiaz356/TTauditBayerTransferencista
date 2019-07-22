@@ -54,11 +54,17 @@ public class CategoryProductsAdapterRecyclerView extends RecyclerView.Adapter<Ca
         holder.tvFullName.setText(categoryProduct.getFullname());
 //        holder.tvComposicion.setText(categoryProduct.getComposicion());
 //        holder.tvUnidad.setText(categoryProduct.getUnidad());
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load("fgh")
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
+        Picasso.get()
                 .load("fgh")
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)
                 .into(holder.imgPhoto);
+
         if(categoryProduct.getStatus() == 0){
             holder.imgStatus.setVisibility(View.INVISIBLE);
             holder.btAudit.setVisibility(View.VISIBLE);

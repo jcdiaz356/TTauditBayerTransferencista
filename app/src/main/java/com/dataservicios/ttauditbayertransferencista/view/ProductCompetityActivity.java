@@ -49,8 +49,11 @@ import com.dataservicios.ttauditbayertransferencista.repo.StoreRepo;
 import com.dataservicios.ttauditbayertransferencista.util.AuditUtil;
 import com.dataservicios.ttauditbayertransferencista.util.SessionManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 public class ProductCompetityActivity extends AppCompatActivity {
 
@@ -64,6 +67,8 @@ public class ProductCompetityActivity extends AppCompatActivity {
     private int                         company_id;
     private int                         audit_id;
     private int                         distributor_id;
+    private int                         selectedOptionsPayment;
+    private String                      randomOrder;
     private float                       montoTotal;
     private TextView                    tvTotal;
     private TextView                    tvDistributor;
@@ -95,6 +100,7 @@ public class ProductCompetityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_competity);
+
         tvTotal                 = (TextView) findViewById(R.id.tvTotal);
         tvDistributor           = (TextView) findViewById(R.id.tvDistributor);
         btSave                  = (Button) findViewById(R.id.btSave);
@@ -112,9 +118,10 @@ public class ProductCompetityActivity extends AppCompatActivity {
         distributorRepo     = new DistributorRepo(activity);
 
         Bundle bundle = getIntent().getExtras();
-        store_id        = bundle.getInt("store_id");
-        audit_id        = bundle.getInt("audit_id");
-        distributor_id  = bundle.getInt("distributor_id");
+        store_id                = bundle.getInt("store_id");
+        audit_id                = bundle.getInt("audit_id");
+        distributor_id          = bundle.getInt("distributor_id");
+        selectedOptionsPayment  = bundle.getInt("selectedOptionsPayment");
 
         company     = (Company)companyRepo.findFirstReg();
         store       = (Store) storeRepo.findById(store_id);
@@ -133,12 +140,28 @@ public class ProductCompetityActivity extends AppCompatActivity {
 
         showToolbar(audit.getFullname().toString(),false);
 
+//        Random r = new Random();
+//        int randomNumber = r.nextInt(1000);
+//        randomOrder = String.valueOf(randomNumber) + String.valueOf(store_id) + String.valueOf(user_id) + String.valueOf(distributor_id) + String.valueOf(visit_id) ;
+
+        randomOrder = String.valueOf(store_id) + "-" + String.valueOf(user_id) + "-" + String.valueOf(distributor_id) + "-" + String.valueOf(visit_id) +"-" + new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+
         productRecyclerView  = (RecyclerView) findViewById(R.id.product_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         productRecyclerView.setLayoutManager(linearLayoutManager);
 
         products = (ArrayList<Product>) productRepo.findByTypeCompetity(1);
+
+        if(products.size()>0){
+            for( int i = 0 ; i < products.size() ; i++) {
+                if (products.get(i).getId()== 909) {
+                    products.remove(i);
+                }
+
+            }
+        }
+
 
         productAdapterRecyclerView =  new ProductAdapterRecyclerView(products, R.layout.cardview_product, activity, store_id, audit_id, distributor_id, new OnEditTextChanged() {
             @Override
@@ -295,7 +318,7 @@ public class ProductCompetityActivity extends AppCompatActivity {
             float mountTotal=0;
             for(OrderDetailTemp m: orderDetailTemps){
                 if(m.getQuantity() > 0){
-                    if (!AuditUtil.saveOrder(company_id,store_id,m.getProduct_id(),visit_id,distributor_id,m.getQuantity(),String.valueOf(m.getTotal()),user_id, String.valueOf(m.getPrice()))) return false;
+                    if (!AuditUtil.saveOrder(company_id,store_id,m.getProduct_id(),visit_id,distributor_id,m.getQuantity(),String.valueOf(m.getTotal()),user_id, String.valueOf(m.getPrice()), randomOrder,selectedOptionsPayment)) return false;
                 }
             }
 
@@ -375,7 +398,7 @@ public class ProductCompetityActivity extends AppCompatActivity {
 //        } else {
          //   alertDialogBasico(getString(R.string.message_save_audit_products));
 //        }
-//        super.onBackPressed ();
+        super.onBackPressed ();
     }
 
     private void alertDialogBasico(String message) {

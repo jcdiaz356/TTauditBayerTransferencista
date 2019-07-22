@@ -54,9 +54,15 @@ public class MediaAdapterReciclerView extends RecyclerView.Adapter<MediaAdapterR
         holder.tvFullName.setText(media.getFile());
         String pathFile = BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath() + "/" + media.getFile() ;
         File imgFile = new File(pathFile);
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(imgFile)
+//                .error(R.drawable.avataruser)
+//                .into(holder.imgPhoto);
+
+        Picasso.get()
                 .load(imgFile)
-                .error(R.drawable.avataruser)
+                .placeholder(R.drawable.loading_image)
+                .error(R.drawable.thumbs_ttaudit)
                 .into(holder.imgPhoto);
     }
 

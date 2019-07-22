@@ -162,8 +162,6 @@ public class MainActivity extends AppCompatActivity {
                         return  false;
                     }
                 }
-
-
 //
                 publishProgress(activity.getString(R.string.text_download_polls));
                 PollRepo pollRepo= new PollRepo(activity);
@@ -261,12 +259,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+                ArrayList<Product> products2 = (ArrayList<Product>) productRepo.findAll();
+
                 publishProgress(activity.getString(R.string.text_download_distributors));
                 DistributorRepo distributorRepo = new DistributorRepo(activity);
                 ArrayList<Distributor> distributors = (ArrayList<Distributor>) distributorRepo.findAll();
 
                 if(distributors.size()==0){
-                    productRepo.deleteAll();
+                    distributorRepo.deleteAll();
                     distributors = AuditUtil.getListDistributors(company.getId());
                     if(distributors.size()!=0){
                         for(Distributor p: distributors){

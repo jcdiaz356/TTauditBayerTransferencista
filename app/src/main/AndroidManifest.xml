@@ -30,6 +30,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -162,10 +163,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!--<service-->
+            <!--android:name=".services.UpdateService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true" />-->
+
         <service
-            android:name=".services.UpdateService"
+            android:name=".services.UplodMediaService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"></service>
 
         <activity android:name=".view.StockProductPopActivity" />
 
@@ -209,7 +215,14 @@
                 android:value=".view.StoreAuditActivity" />
         </activity>
         <activity android:name=".view.DistributorsActivity" />
-        <activity android:name=".view.CompetityActivity"></activity>
+        <activity android:name=".view.CompetityActivity" />
+        <activity android:name=".view.PollCompetitiesActivity" />
+        <activity android:name=".view.SearchOrdersActivity" />
+        <activity android:name=".view.AniversaryStoreActivity" />
+        <activity android:name=".view.ContactsActivity" />
+        <activity android:name=".view.ContactNewActivity" />
+        <activity android:name=".view.CreditActivity" />
+        <activity android:name=".view.CreditLineActivity"></activity>
     </application>
 
 </manifest>

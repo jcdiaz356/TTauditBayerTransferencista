@@ -55,11 +55,17 @@ public class ProductAASSAdapterRecyclerView extends RecyclerView.Adapter<Product
         holder.tvFullName.setText(product.getFullname());
         holder.tvComposicion.setText(product.getComposicion());
         holder.tvUnidad.setText(product.getUnidad());
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(product.getImagen())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
+        Picasso.get()
                 .load(product.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)
                 .into(holder.imgPhoto);
+
         if(product.getStatus() == 0){
             holder.imgStatus.setVisibility(View.INVISIBLE);
             holder.btAudit.setVisibility(View.VISIBLE);

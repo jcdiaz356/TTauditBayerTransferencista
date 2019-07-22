@@ -55,7 +55,13 @@ public class PublicityHistoryAdapterReciclerView extends RecyclerView.Adapter<Pu
         holder.tvFullName.setText(publicityHistory.getFullname());
         holder.tvCompanyName.setText(publicityHistory.getCompany_name() + " (" + String.valueOf(publicityHistory.getCompany_id()) + ")");
         holder.tvDate.setText(publicityHistory.getUpdated_at());
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(publicityHistory.getImagen())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
+
+        Picasso.get()
                 .load(publicityHistory.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)

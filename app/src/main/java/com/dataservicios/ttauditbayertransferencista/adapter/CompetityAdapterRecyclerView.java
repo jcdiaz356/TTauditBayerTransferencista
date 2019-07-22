@@ -1,6 +1,8 @@
 package com.dataservicios.ttauditbayertransferencista.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +19,8 @@ import com.dataservicios.ttauditbayertransferencista.model.Poll;
 import com.dataservicios.ttauditbayertransferencista.model.Publicity;
 import com.dataservicios.ttauditbayertransferencista.model.Store;
 import com.dataservicios.ttauditbayertransferencista.repo.StoreRepo;
+import com.dataservicios.ttauditbayertransferencista.view.CategoryProductActivity;
+import com.dataservicios.ttauditbayertransferencista.view.PollCompetitiesActivity;
 import com.dataservicios.ttauditbayertransferencista.view.PollPublicityActivity;
 import com.squareup.picasso.Picasso;
 
@@ -37,16 +41,16 @@ public class CompetityAdapterRecyclerView extends RecyclerView.Adapter<Competity
         this.store_id               = store_id;
         this.audit_id               = audit_id;
     }
-    @NonNull
+
     @Override
-    public CompetityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CompetityViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
 
-        return new CompetityAdapterRecyclerView.CompetityViewHolder(view) ;
+        return new CompetityViewHolder(view) ;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CompetityViewHolder holder, int position) {
+    public void onBindViewHolder( CompetityViewHolder holder, int position) {
 
         final ActivityPublicity activityPublicity = activityPublicities.get(position);
 
@@ -67,21 +71,28 @@ public class CompetityAdapterRecyclerView extends RecyclerView.Adapter<Competity
 
                 StoreRepo storeRepo = new StoreRepo(activity);
                 Store store = (Store) storeRepo.findById(store_id);
-                if(store.getStatus_change() == 0) {
+//                if(store.getStatus_change() == 0) {
 
 //                    Poll poll = new Poll();
 //                    poll.setPublicity_id(publicity.getId());
 //                    poll.setOrder(23);
 //                    PollPublicityActivity.createInstance((Activity) activity, store_id,audit_id,poll);
-                    Toast.makeText(activity,String.valueOf(activityPublicity.getId()),Toast.LENGTH_LONG);
-                } else  if( store.getStatus_change() == 1) {
+//                    Toast.makeText(activity,String.valueOf(activityPublicity.getId()),Toast.LENGTH_LONG).show();
+//                } else  if( store.getStatus_change() == 1) {
 //                    Poll poll = new Poll();
 //                    poll.setPublicity_id(publicity.getId());
 //                    poll.setOrder(212);
 //                    PollPublicityActivity.createInstance((Activity) activity, store_id,audit_id,poll);
-                    Toast.makeText(activity,String.valueOf(activityPublicity.getId()),Toast.LENGTH_LONG);
-                }
+//                    Toast.makeText(activity,String.valueOf(activityPublicity.getId()),Toast.LENGTH_LONG).show();
+//                }
 
+                Bundle bundle = new Bundle();
+                bundle.putInt("store_id", Integer.valueOf(store_id));
+                bundle.putInt("audit_id", Integer.valueOf(audit_id));
+                bundle.putInt("publicity_id", Integer.valueOf(activityPublicity.getId()));
+                Intent intent = new Intent(activity,PollCompetitiesActivity.class);
+                intent.putExtras(bundle);
+                activity.startActivity(intent);
 
             }
         });
@@ -90,7 +101,7 @@ public class CompetityAdapterRecyclerView extends RecyclerView.Adapter<Competity
 
     @Override
     public int getItemCount() {
-        return 0;
+        return activityPublicities.size();
     }
 
     public class CompetityViewHolder extends RecyclerView.ViewHolder {

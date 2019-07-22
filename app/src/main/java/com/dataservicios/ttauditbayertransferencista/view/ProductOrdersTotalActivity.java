@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -303,6 +306,7 @@ public class ProductOrdersTotalActivity extends AppCompatActivity {
         finish();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void tableOrderDetail(){
 
         ArrayList<Order> orders = (ArrayList<Order>) orderRepo.findByOrder(company_id,store_id,visit_id);
@@ -322,6 +326,8 @@ public class ProductOrdersTotalActivity extends AppCompatActivity {
             TableLayout table = new TableLayout(this);
             table.setStretchAllColumns(true);
             table.setShrinkAllColumns(true);
+//            table.setBackgroundColor(Color.parseColor("#FF0000"));
+            table.setBackgroundResource(R.color.colorPrimaryDark);
             table.setPadding(5, 5, 5, 5);
 
 //            ---------------------------------------------
@@ -330,9 +336,10 @@ public class ProductOrdersTotalActivity extends AppCompatActivity {
             TableRow rowTitle = new TableRow(this);
             rowTitle.setGravity(Gravity.CENTER_HORIZONTAL);
             TextView title = new TextView(this);
+            title.setTextColor(getColor(R.color.colorWhite));
             title.setText("Distribuidor: " + distributor.getFullName());
 
-            title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
             title.setGravity(Gravity.LEFT);
             title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
 
@@ -360,18 +367,24 @@ public class ProductOrdersTotalActivity extends AppCompatActivity {
 
                 TextView tvCant = (TextView) fullRow.findViewById(R.id.tvCant);
                 tvCant.setText(String.valueOf(d.getQuantity()));
+                tvCant.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
 
                 TextView tvCode = (TextView) fullRow.findViewById(R.id.tvCode);
                 tvCode.setText(String.valueOf(product.getCode()));
+                tvCode.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
                 // tvCode.setId(p.getId());
 
                 TextView tvProductName = (TextView) fullRow.findViewById(R.id.tvProductName);
+                tvProductName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
                 tvProductName.setText(String.valueOf(product.getFullname().substring(0,5)));
 
+
                 TextView tvPrice = (TextView) fullRow.findViewById(R.id.tvPrice);
+                tvPrice.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
                 tvPrice.setText(String.valueOf(d.getPrice()));
 
                 TextView tvTotal = (TextView) fullRow.findViewById(R.id.tvTotal);
+                tvTotal.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
                 tvTotal.setText(String.valueOf(d.getTotal()));
                 table.addView(fullRow);
             }
@@ -383,7 +396,7 @@ public class ProductOrdersTotalActivity extends AppCompatActivity {
             TextView tvTotal = new TextView(this);
             tvTotal.setText("Total: " + String.valueOf(o.getMount_total()));
 
-            tvTotal.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+            tvTotal.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
             tvTotal.setGravity(Gravity.RIGHT);
             tvTotal.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
             tvTotal.setTextColor(getResources().getColor(R.color.colorAccent));

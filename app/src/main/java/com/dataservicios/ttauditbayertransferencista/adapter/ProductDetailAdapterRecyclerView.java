@@ -76,7 +76,13 @@ public class ProductDetailAdapterRecyclerView extends RecyclerView.Adapter<Produ
         holder.tvFullName.setText(productDetail.getFullname());
         holder.tvComposicion.setText(productDetail.getComposicion());
         holder.tvUnidad.setText(productDetail.getUnidad());
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(productDetail.getImagen())
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
+
+        Picasso.get()
                 .load(productDetail.getImagen())
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)

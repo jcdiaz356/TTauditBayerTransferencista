@@ -1,104 +1,73 @@
 package com.dataservicios.ttauditbayertransferencista.view;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.dataservicios.ttauditbayertransferencista.AlbumStorageDirFactory;
-import com.dataservicios.ttauditbayertransferencista.BaseAlbumDirFactory;
-import com.dataservicios.ttauditbayertransferencista.FroyoAlbumDirFactory;
 import com.dataservicios.ttauditbayertransferencista.R;
 import com.dataservicios.ttauditbayertransferencista.adapter.ImageAdapter;
 import com.dataservicios.ttauditbayertransferencista.model.Media;
-import com.dataservicios.ttauditbayertransferencista.repo.CompanyRepo;
 import com.dataservicios.ttauditbayertransferencista.repo.MediaRepo;
 import com.dataservicios.ttauditbayertransferencista.util.BitmapLoader;
 import com.dataservicios.ttauditbayertransferencista.util.GlobalConstant;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-/**
- * Created by user on 06/02/2015.
- */
 public class AndroidCustomGalleryActivity extends AppCompatActivity {
+
     public static final String LOG_TAG = AndroidCustomGalleryActivity.class.getSimpleName();
+    private static final int STORAGE_CODE = 100;
     private static final int TAKE_PICTURE = 1;
+    private static final int DELETE_FILES = 1;
+    private static final int COPY_FILES = 2;
+    private static final int REQUEST_TAKE_PHOTO_GALERY = 3;
 
-    private String mCurrentPhotoPath;
-    private AlbumStorageDirFactory mAlbumStorageDirFactory = null;
-    private ImageAdapter            imageAdapter;
-    private ArrayList<String> f = new ArrayList<String>();// list of file paths
-    private File[]                  listFile;
-    private ArrayList<String> names_file = new ArrayList<String>();
-    private Activity myActivity = (Activity) this;;
+    private ImageAdapter imageAdapter;
+    private ArrayList<Media> mediasCamera= new ArrayList<Media>();
+    private Activity activity =  this;
+    private String imageFileNameNew ;
+    private GridView imagegrid;
+    private ProgressDialog pDialog;
+
+    private int operation; // 1= delete files , 2= copy files
+
     private Media                   media;
-    private CompanyRepo             companyRepo;
+    private MediaRepo mediaRepo;
 
 
-
-    /**
-     * Inicia una nueva instancia de la actividad
-     *
-     * @param activity Contexto desde donde se lanzará
-     * @param media pregunta que se mostrará segun el oreden
-     */
-    public static void createInstance(Activity activity, Media media) {
-        Intent intent = getLaunchIntent(activity, media);
-        activity.startActivity(intent);
-    }
-    /**
-     * Construye un Intent a partir del contexto y la actividad
-     * de detalle.
-     *
-     * @param context Contexto donde se inicia
-     * @param media
-     * @return retorna un Intent listo para usar
-     */
-    private static Intent getLaunchIntent(Context context, Media media) {
-        Intent intent = new Intent(context, AndroidCustomGalleryActivity.class);
-        intent.putExtra("store_id"              ,media.getStore_id()           );
-        intent.putExtra("poll_id"               ,media.getPoll_id()            );
-        intent.putExtra("company_id"            ,media.getCompany_id()         );
-        intent.putExtra("publicities_id"        ,media.getPublicity_id()       );
-        intent.putExtra("product_id"            ,media.getProduct_id()         );
-        intent.putExtra("category_product_id"   ,media.getCategory_product_id());
-        intent.putExtra("visit_id"              ,media.getVisit_id()           );
-        intent.putExtra("monto"                 ,media.getMonto()              );
-        intent.putExtra("razon_social"          ,media.getRazonSocial()        );
-        intent.putExtra("tipo"                  ,media.getType()               );
-        return intent;
-    }
-
-    /** Called when the myActivity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gallery);
-        showToolbar(getString(R.string.title_activity_upload_photo),false);
+        setContentView(R.layout.activity_android_custom_gallery);
+        mediasCamera = new ArrayList<Media>();
 
         Bundle bundle = getIntent().getExtras();
         media= new Media();
@@ -107,48 +76,47 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
         media.setCompany_id(bundle.getInt("company_id"));
         media.setPublicity_id(bundle.getInt("publicities_id"));
         media.setProduct_id(bundle.getInt("product_id"));
-        media.setVisit_id(bundle.getInt("visit_id"));
         media.setCategory_product_id(bundle.getInt("category_product_id"));
         media.setMonto(bundle.getString("monto"));
         media.setRazonSocial(bundle.getString("razon_social"));
         media.setType(bundle.getInt("tipo"));
+        media.setStatus(0);
 
-        getFromSdcard();
+        mediaRepo = new MediaRepo(activity);
 
-        final GridView imagegrid = (GridView) findViewById(R.id.PhoneImageGrid);
-        imageAdapter = new ImageAdapter(myActivity,f);
-        imagegrid.setAdapter(imageAdapter);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
-        } else {
-            mAlbumStorageDirFactory = new BaseAlbumDirFactory();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkPermission()) {
+                //do your work
+                getFromSdcard();
+            } else {
+                requestPermission();
+            }
         }
+
+        imagegrid = (GridView) findViewById(R.id.PhoneImageGrid);
+        imageAdapter = new ImageAdapter(activity,mediasCamera);
+        imagegrid.setAdapter(imageAdapter);
 
         Button btn_photo = (Button)findViewById(R.id.take_photo);
         Button btn_upload = (Button)findViewById(R.id.save_images);
-        // Register the onClick listener with the implementation above
+        Button btDeletePhoto = (Button) findViewById(R.id.btDeletePhoto);
+        Button galery_photo = (Button) findViewById(R.id.galery_photo);
+        pDialog = new ProgressDialog(activity);
+
+
         btn_photo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
                 // create intent with ACTION_IMAGE_CAPTURE action
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Create an image file name
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName =   String.format("%06d", Integer.parseInt(String.valueOf(media.getStore_id())))+ "_" + media.getCompany_id() + GlobalConstant.JPEG_FILE_PREFIX + timeStamp;
-                File albumF = BitmapLoader.getAlbumDir(myActivity);
-                // to save picture remove comment
-                File file = new File(albumF,imageFileName+GlobalConstant.JPEG_FILE_SUFFIX);
+                imageFileNameNew =   generateNameFile();
+                File albumF = BitmapLoader.getAlbumDir(activity);
+                // Ruta donde  se Guardara la foto en la ruta especificada
+                File file = new File(albumF,imageFileNameNew);
                 Uri photoPath = Uri.fromFile(file);
-                //intent.putExtra(MediaStore.EXTRA_OUTPUT, photoPath);
-                mCurrentPhotoPath = BitmapLoader.getAlbumDir(myActivity).getAbsolutePath();
-                // start camera myActivity
-//                startActivityForResult(intent, TAKE_PICTURE);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    Uri contentUri = FileProvider.getUriForFile(myActivity, "com.dataservicios.ttauditbayertransferencista.fileProvider", file);
-                    //intent.setDataAndType(contentUri, type);
+                    Uri contentUri = FileProvider.getUriForFile(activity, "com.dataservicios.ttauditbayertransferencista.fileProvider", file);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
                 } else {
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoPath);
@@ -158,193 +126,292 @@ public class AndroidCustomGalleryActivity extends AppCompatActivity {
         });
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v)
-            {
-                //File file= new File(Environment.getExternalStorageDirectory().toString()+"/Pictures/" + getAlbumName());
-                File file= BitmapLoader.getAlbumDir(myActivity);
-                if (file.isDirectory()) {
-                    int position =0;
-                    int contador = 0;
-                    int holder_counter=0;
-                    names_file.clear();
-                    if (listFile.length>0){
-                        //for (int i = 0; i < listFile.length; i++){
-                        int total = imageAdapter.getCount();
-                        int count = imagegrid.getAdapter().getCount();
-                        for (int i = 0; i < count; i++) {
-                           // LinearLayout itemLayout = (LinearLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
-                            RelativeLayout itemLayout = (RelativeLayout)imagegrid.getChildAt(i); // Find by under LinearLayout
-                            CheckBox checkbox = (CheckBox)itemLayout.findViewById(R.id.itemCheckBox);
-                            if(checkbox.isChecked())
-                            {
-                                contador ++;
-                                // Log.d("Item "+String.valueOf(i), checkbox.getTag().toString());
-                                //Toast.makeText(myActivity,checkbox.getTag().toString() ,Toast.LENGTH_LONG).show();
-                                if (  listFile[i].getName().substring(0,6).equals(String.format("%06d", media.getStore_id()) )) {
-                                    String name = listFile[i].getName();
-                                    names_file.add(name);
-                                    //  holder_counter++;
-                                    try {
-                                        copyFile(BitmapLoader.getAlbumDir(myActivity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirTemp(myActivity).getAbsolutePath() + "/" + listFile[i].getName());
-                                        copyFile(BitmapLoader.getAlbumDir(myActivity) + "/" + listFile[i].getName(), BitmapLoader.getAlbumDirBackup(myActivity) + "/" + listFile[i].getName());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                listFile[i].delete();
-                            }
+            @Override
+            public void onClick(View v) {
+                operation = COPY_FILES ;
+                if (imageAdapter.countCheckedItems() > 0 ){
+                     new operationFile().execute();
+                }  else {
+                    Toast.makeText(activity,R.string.message_selected_photo, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btDeletePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                operation = DELETE_FILES ;
+                if (imageAdapter.countCheckedItems() > 0 ) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle(R.string.message_delete_file);
+                    builder.setMessage(R.string.message_delete_file_information);
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            new operationFile().execute();
+
                         }
-
-                        if(contador > 0){
-
-                            Toast.makeText(myActivity, "Seleccionó " + String.valueOf(contador) + " imágenes", Toast.LENGTH_LONG).show();
-                        } else{
-                            Toast.makeText(myActivity, R.string.message_selection_image, Toast.LENGTH_LONG).show();
-                            return;
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
-
-
-                        //return;
-
-                    } else {
-
-                        Toast toast;
-                        toast = Toast.makeText(myActivity, R.string.message_image_no_found , Toast.LENGTH_SHORT);
-                        toast.show();
-                        return;
-                    }
-
+                    });
+                    builder.show();
+                    builder.setCancelable(false);
                 }
 
-                MediaRepo mediaRepo = new MediaRepo(myActivity);
-                for (int i = 0; i < names_file.size(); i++) {
-                    String foto = names_file.get(i);
-                    //String pathFile =getAlbumDirTemp().getAbsolutePath() + "/" + foto ;
-                    String created_at = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
-                    media.setCreated_at(created_at);
-                    media.setFile(foto);
-                    mediaRepo.create(media);
+                else {
+                    Toast.makeText(activity, R.string.message_selected_photo, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
-                ArrayList<Media> medias = (ArrayList<Media>) mediaRepo.findAll();
-                Log.d(LOG_TAG,medias.toString());
-                finish();
+            }
+        });
+
+
+        galery_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, REQUEST_TAKE_PHOTO_GALERY);
 
             }
         });
     }
 
-
-    //Enviar a AgenteDetailActivity
-
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Bundle bundle = getIntent().getExtras();
-        String idPDV = bundle.getString("idPDV");
-
-        // getting values from selected ListItem
-        String aid = idPDV;
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // go to previous screen when app icon in action bar is clicked
-
-                // app icon in action bar clicked; goto parent myActivity.
-                onBackPressed();
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case TAKE_PICTURE: {
                 if (resultCode == RESULT_OK) {
-                    handleBigCameraPhoto();
+                    // handleBigCameraPhoto();
+                    //getFromSdcard();
+                    Media media = new Media();
+                    media.setName(imageFileNameNew);
+                    media.setPathFile(BitmapLoader.getAlbumDir(activity).getAbsolutePath() + "/" + imageFileNameNew);
+                    media.setSelectedFile(false);
+                    mediasCamera.add(media);
+                    imageAdapter.notifyDataSetChanged();
+                   // imagegrid.setAdapter(imageAdapter);
+                    galleryAddPic();
                 }
                 break;
             }
+
+            case  REQUEST_TAKE_PHOTO_GALERY:
+                if (resultCode == RESULT_OK) {
+
+                    Uri selectedImage = data.getData();
+
+                    try {
+
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                        Log.e("Activity", "Pick from Gallery::>>> ");
+
+                        String imgPath = getRealPathFromURI(selectedImage);
+                        File destination = new File(imgPath.toString());
+
+                        imageFileNameNew =   generateNameFile();
+                        BitmapLoader.copyFile(destination.getAbsolutePath(),BitmapLoader.getAlbumDir(activity).getAbsolutePath()+ "/" +  imageFileNameNew );
+
+                        Media media = new Media();
+                        media.setName(imageFileNameNew);
+                        media.setPathFile(BitmapLoader.getAlbumDir(activity).getAbsolutePath() + "/" + imageFileNameNew);
+                        media.setSelectedFile(false);
+                        mediasCamera.add(media);
+                        imageAdapter.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // imagegrid.setAdapter(imageAdapter);
+                }
+                break;
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case STORAGE_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do your work
+                    getFromSdcard();
+                } else {
+                    Log.e(LOG_TAG, "Permission Denied, You cannot use local drive .");
+                    finish();
+                }
+                break;
+        }
+    }
 
-    private void handleBigCameraPhoto() {
+    protected boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-        if (mCurrentPhotoPath != null) {
-            galleryAddPic();
-            mCurrentPhotoPath = null;
-            AndroidCustomGalleryActivity.createInstance((Activity) myActivity, this.media);
+    protected void requestPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(this, R.string.message_permission_storage_local, Toast.LENGTH_LONG).show();
+            Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            i.addCategory(Intent.CATEGORY_DEFAULT);
+            i.setData(Uri.parse("package:" + getPackageName()));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            startActivity(i);
             finish();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_CODE);
+            }
         }
-
     }
 
+    //Enviar a AgenteDetailActivity
+    public void getFromSdcard()
+    {
+        File file= BitmapLoader.getAlbumDir(activity);
+        File[] listFileAll;
+        mediasCamera.clear();
+        if (file.isDirectory())
+        {
+            listFileAll = file.listFiles();
+            if (listFileAll != null){
+                for (int i = 0; i < listFileAll.length; i++)
+                {
+                    Media media = new Media();
+                    media.setPathFile(listFileAll[i].getAbsolutePath());
+                    media.setName(listFileAll[i].getName());
+                    media.setSelectedFile(false);
 
+                    mediasCamera.add(media);
+                }
+            }
+        }
+    }
+
+    /**
+     * Obtiene la ruta real desde un Uri de los archivos de galeria0
+     * @param contentUri
+     * @return
+     */
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Audio.Media.DATA};
+//        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        Cursor cursor =getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    class operationFile extends AsyncTask<Void, Integer , Boolean> {
+        @Override
+        protected void onPreExecute() {
+            //tvCargando.setText("Cargando ProductDetail...");
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage(getString(R.string.message_copy_file));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            super.onPreExecute();
+
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO Auto-generated method stub
+            ArrayList<Media> mediaAll;
+            mediaAll =  imageAdapter.getAllMedias();
+            int count = mediaAll.size();
+            for (int i=0 ; i < count; i++) {
+                if(mediaAll.get(i).getSelectedFile()){
+                    File fileSelected;
+                    fileSelected = new File(mediasCamera.get(i).getPathFile().toString());
+                    if(operation == COPY_FILES ) {
+                        try {
+                            BitmapLoader.copyFile(fileSelected.getPath(), BitmapLoader.getAlbumDirBackup(activity).getAbsolutePath() + "/" + fileSelected.getName());
+                            BitmapLoader.compresFileDestinationtion(BitmapLoader.getAlbumDirTemp(activity).getAbsolutePath(), fileSelected,activity);
+
+                            String created_at = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+                            media.setCreated_at(created_at);
+                            media.setFile(fileSelected.getName());
+                            mediaRepo.create(media);
+                            fileSelected.delete();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            // pDialogHide();
+                            //  alertDialogBasico(getString(R.string.message_no_save_photo));
+                            return false;
+                        }
+                    } else if (operation == DELETE_FILES){
+                        fileSelected.delete();
+                    }
+                }
+            }
+            //pDialogHide();
+            return true;
+        }
+        protected void onPostExecute(Boolean result) {
+            // dismiss the dialog once product deleted
+            if (result){
+                getFromSdcard();
+                imageAdapter.notifyDataSetChanged();
+
+                if(operation == COPY_FILES ) {
+                    Toast.makeText(activity , R.string.message_selected_copy_photo , Toast.LENGTH_LONG).show();
+                    finish();
+                } else if(operation == COPY_FILES ){
+                    Toast.makeText(activity , R.string.message_selected_delete_photo , Toast.LENGTH_LONG).show();
+                }
+
+
+            } else {
+                Toast.makeText(activity , R.string.message_no_save_photo , Toast.LENGTH_LONG).show();
+            }
+            pDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    /**
+     * Añadir la foto a una galería.
+     */
     private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
-        File f = new File(mCurrentPhotoPath);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(BitmapLoader.getAlbumDir(activity).getAbsolutePath() + "/" + imageFileNameNew);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
-
     }
 
-
-    public void getFromSdcard()
-    {
-
-        //File file= new File(Environment.getExternalStorageDirectory().toString()+ GlobalConstant.directory_images + getAlbumName());
-        File file= BitmapLoader.getAlbumDir(myActivity);
-        if (file.isDirectory())
-        {
-            listFile = file.listFiles();
-            if (listFile != null){
-                for (int i = 0; i < listFile.length; i++)
-                {
-                    if (  listFile[i].getName().substring(0,6).equals(String.format("%06d", media.getStore_id()) ))
-                    {
-                        f.add(listFile[i].getAbsolutePath());
-                    }
-
-                }
-            }
-
-
-        }
+    /**
+     * Genera un nombre de archivo en formato jpg
+     * @return
+     */
+    private String generateNameFile() {
+        String fileNameNew;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        fileNameNew =   String.format("%06d", Integer.parseInt(String.valueOf(media.getStore_id())))+ "_" + String.valueOf(media.getCompany_id()) + GlobalConstant.JPEG_FILE_PREFIX + timeStamp + GlobalConstant.JPEG_FILE_SUFFIX;
+        return fileNameNew;
     }
 
-    public void copyFile(String selectedImagePath, String string) throws IOException {
-        InputStream in = new FileInputStream(selectedImagePath);
-        OutputStream out = new FileOutputStream(string);
-
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-
-    }
-
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-
-        //overridePendingTransition(R.anim.anim_slide_in_right,R.anim.anim_slide_out_right);
-    }
-
-    private void showToolbar(String title, boolean upButton){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(upButton);
-
-    }
 }
+

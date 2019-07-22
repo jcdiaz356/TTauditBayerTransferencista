@@ -81,7 +81,13 @@ public class StockProductPopAdapterRecyclerView extends RecyclerView.Adapter<Sto
 
 
         holder.imgStatus.setVisibility(View.GONE);
-        Picasso.with(activity)
+//        Picasso.with(activity)
+//                .load(R.drawable.thumbs_ttaudit)
+//                .placeholder(R.drawable.loading_image)
+//                .error(R.drawable.thumbs_ttaudit)
+//                .into(holder.imgPhoto);
+
+        Picasso.get()
                 .load(R.drawable.thumbs_ttaudit)
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.thumbs_ttaudit)

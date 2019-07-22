@@ -285,18 +285,31 @@ public class PollProductActivity extends AppCompatActivity {
 
     }
 
-    private void takePhoto() {
+//    private void takePhoto() {
+//
+//        Media media = new Media();
+//        media.setStore_id(store_id);
+//        media.setPoll_id(poll.getId());
+//        media.setCompany_id(company_id);
+//        media.setProduct_id(product_id);
+//        media.setVisit_id(store.getVisit_id());
+//        media.setType(1);
+//        AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
+//    }
+        private void takePhoto() {
 
-        Media media = new Media();
-        media.setStore_id(store_id);
-        media.setPoll_id(poll.getId());
-        media.setCompany_id(company_id);
-        media.setProduct_id(product_id);
-        media.setVisit_id(store.getVisit_id());
-        media.setType(1);
-        AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
-    }
-
+            Intent intent = new Intent(activity, AndroidCustomGalleryActivity.class);
+            intent.putExtra("store_id"              ,store_id);
+            intent.putExtra("poll_id"               ,poll.getId());
+            intent.putExtra("company_id"            ,company_id);
+            intent.putExtra("publicities_id"        ,publicity_id);
+            intent.putExtra("product_id"            ,product_id);
+            intent.putExtra("category_product_id"   ,category_product_id);
+            intent.putExtra("monto"                 ,"");
+            intent.putExtra("razon_social"          ,"");
+            intent.putExtra("tipo"                  ,1);
+            startActivity(intent);
+        }
 
     /**
      * Guarda la pregunta

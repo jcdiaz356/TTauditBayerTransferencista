@@ -9,6 +9,8 @@ public class Media {
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField
+    private String name;
+    @DatabaseField
     private int store_id;
     @DatabaseField
     private int poll_id;
@@ -19,8 +21,6 @@ public class Media {
     @DatabaseField
     private int product_id;
     @DatabaseField
-    private int visit_id;
-    @DatabaseField
     private int company_id;
     @DatabaseField
     private String monto ;
@@ -30,6 +30,16 @@ public class Media {
     private int type ;
     @DatabaseField
     private String file ;
+    @DatabaseField
+    private String log ;
+    @DatabaseField
+    private int status; // 0->default, inicio de registo; 1-> no se encontro el archivo
+    @DatabaseField
+    private Boolean selectedFile;
+    @DatabaseField
+    private String pathFile;
+    @DatabaseField
+    private int status_send ;
     @DatabaseField
     private String created_at;
 
@@ -71,14 +81,6 @@ public class Media {
 
     public void setProduct_id(int product_id) {
         this.product_id = product_id;
-    }
-
-    public int getVisit_id() {
-        return visit_id;
-    }
-
-    public void setVisit_id(int visit_id) {
-        this.visit_id = visit_id;
     }
 
     public int getCategory_product_id() {
@@ -137,5 +139,51 @@ public class Media {
         this.created_at = created_at;
     }
 
+    public String getLog() {
+        return log;
+    }
 
+    public void setLog(String log) {
+        this.log = log;
+    }
+
+    public Boolean getSelectedFile() {
+        return selectedFile;
+    }
+
+    public void setSelectedFile(Boolean selectedFile) {
+        this.selectedFile = selectedFile;
+    }
+
+    public String getPathFile() {
+        return pathFile;
+    }
+
+    public void setPathFile(String pathFile) {
+        this.pathFile = pathFile;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getStatus_send() {
+        return status_send;
+    }
+
+    public void setStatus_send(int status_send) {
+        this.status_send = status_send;
+    }
 }

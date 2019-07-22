@@ -19,6 +19,7 @@ public class PollDetail {
     private int     product_id;
     private int     category_product_id;
     private int     publicity_id;
+    private int     laboratory_id;
     private int     category_id;
     private int     company_id;
     private int     visit_id;
@@ -139,6 +140,14 @@ public class PollDetail {
 
     public void setPublicity_id(int publicity_id) {
         this.publicity_id = publicity_id;
+    }
+
+    public int getLaboratory_id() {
+        return laboratory_id;
+    }
+
+    public void setLaboratory_id(int laboratory_id) {
+        this.laboratory_id = laboratory_id;
     }
 
     public int getCompany_id() {

@@ -16,7 +16,7 @@
         android:paddingRight="40px"
         android:paddingBottom="3px"
         android:textStyle="bold"
-        android:text="Cant." />
+        android:text="Can." />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:paddingRight="20px"
         android:paddingBottom="3px"
         android:textStyle="bold"
-        android:text="Producto." />
+        android:text="Pro." />
 
     <TextView
         android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
         android:paddingRight="20px"
         android:paddingBottom="3px"
         android:textStyle="bold"
-        android:text="Precio" />
+        android:text="Pre." />
 
     <TextView
         android:layout_width="wrap_content"

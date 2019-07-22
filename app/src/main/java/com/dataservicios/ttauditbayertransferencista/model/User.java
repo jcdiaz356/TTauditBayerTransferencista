@@ -8,6 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 
 public class User {
 
+
     @DatabaseField(id = true)
     private int id;
     @DatabaseField

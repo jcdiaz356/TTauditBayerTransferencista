@@ -80,6 +80,7 @@ public class ProductPlanFidelizationAdapterRecyclerView extends RecyclerView.Ada
         productPlanSale = productPlanSales.get(position);
 
 
+        ArrayList<Product> products = (ArrayList<Product>) productRepo.findAll();
         product = (Product) productRepo.findById(productPlanSale.getProduct_id());
         store   = (Store) storeRepo.findById(store_id);
 

@@ -15,6 +15,7 @@
         <item>Registro de fotos</item>
         <item>Sincronizar Tiendas</item>
         <item>Reinicializar Campaña</item>
+        <item>Buscar Pedidos</item>
     </string-array>
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
@@ -25,6 +26,7 @@
         <item>@drawable/ic_menu_gallery</item>
         <item>@drawable/ic_menu_sync</item>
         <item>@drawable/ic_menu_sync</item>
+        <item>@drawable/ic_search_black_24dp</item>
     </array>
     <string name="desc_list_item_icon">Item Icon</string>
 
@@ -126,6 +128,7 @@
     <string name="text_close_store">Cerrar Tienda</string>
     <string name="text_info_route">Información de ruta</string>
     <string name="text_info_store">Información de tienda</string>
+    <string name="text_info_aniversary_store">Aniversario de la Tienda</string>
     <string name="text_info_audits">Auditorias</string>
     <string name="text_download_polls">Descargando preguntas</string>
     <string name="text_download_polls_otpions">Descargando opciones de pregunta</string>
@@ -224,6 +227,48 @@
     <string name="message_pending_order_finalize">Tiene pedidos pendientes, por favor pulse el botón finalizar para continuar</string>
     <string name="text_download_laboratories">Descargando laboratorios</string>
     <string name="text_download_activity_competity">Descargado actividades de competencia</string>
+    <string name="text_actividades">Actividades: </string>
+    <string name="text_competity">Competencias</string>
+    <string name="text_search_orders">Buscar pedidos</string>
+    <string name="text_credito">Tiene credito en:</string>
+    <string name="text_type_payment">Tipo de pago: </string>
+    <string name="text_pyment_credito">Crédito</string>
+    <string name="text_pyment_contado">Contado</string>
+    <string name="message_select_options_payment">Selecionar una opción de pago</string>
+    <string name="text_date_anyversary">Ingresar fecha</string>
+    <string name="text_format_date">yyyy-mm-dd</string>
+    <string name="text_aniversary_store">Ingresar línea de crédito</string>
+    <string name="message_requiere_date">Ingresar la fecha</string>
+    <string name="message_found">Se encontraron</string>
+    <string name="text_contcts">contactos</string>
+    <string name="action_add_contact">Nuevo Contacto</string>
+    <string name="text_contact_new">Nuevo Contácto</string>
+    <string name="text_contact_name">Nombre</string>
+    <string name="text_cargo">Cargo</string>
+    <string name="text_telephone">Teléfono</string>
+    <string name="text_celu">Celular</string>
+    <string name="text_email">Correo</string>
+    <string name="text_date_birth">Fecha nacimiento</string>
+    <string name="message_requiere_nombre">Ingresar nombre</string>
+    <string name="text_line_credit">Línea de crédito</string>
+    <string name="action_add_line_credito">Añadir Línea de Crédito</string>
+
+    <string name="message_permission_storage_local">Por favor, permita este permiso en la configuración de la aplicación</string>
+    <string name="message_no_save_photo">No se pudo guardar la imagen intentelo nuevamente</string>
+    <string name="message_copy_file">Copiando Archivos</string>
+    <string name="message_selected_photo">Selecione una foto</string>
+    <string name="message_selected_copy_photo">Foto copiada</string>
+    <string name="message_error_compress_file">Error al comprimir el archivo</string>
+    <string name="message_gps_error_get_location">No se pudo obtener la ubicación</string>
+    <string name="message_gps_error_save_location">No se pudo guardar la ubicación</string>
+    <string name="message_selected_delete_photo">Foto eliminada</string>
+    <string name="text_name_campaign">Campaña</string>
+    <string name="text_user_email">Email</string>
+    <string name="text_user_name">Usuario</string>
+    <string name="text_route_name">Ruta</string>
+
+    <string name="message_delete_file">Eliminar Archivo</string>
+    <string name="message_delete_file_information">Está seguro que desea  eliminar el archivo?</string>
 
 
 </resources>

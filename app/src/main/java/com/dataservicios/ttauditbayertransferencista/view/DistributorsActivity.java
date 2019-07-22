@@ -57,11 +57,14 @@ public class DistributorsActivity extends AppCompatActivity {
     private Activity activity =  this;
     private ProgressDialog pDialog;
     private String selectedOptions = "0";
+    private String selectedOptionsPayment = "0";
     private TextView tvStoreFullName,tvStoreId,tvAddress ,tvReferencia,tvDistrict,tvAuditoria, tvType ;
     private Button                          btSave,btViewOrder,btOrder;
     private CheckBox[]                      checkBoxArray;
     private RadioButton[]                   radioButtonArray;
+    private RadioButton[]                   rbPayment;
     private RadioGroup                      radioGroup;
+    private RadioGroup                      rgPayment;
     private Switch                          swYesNo;
     private ImageButton                     btPhoto;
     private LinearLayout                    lyComment;
@@ -157,6 +160,7 @@ public class DistributorsActivity extends AppCompatActivity {
         lyComment           = (LinearLayout)findViewById(R.id.lyComment);
         lyOptions           = (LinearLayout)findViewById(R.id.lyOptions);
         lyDistributorPrice  = (LinearLayout)findViewById(R.id.lyDistributorPrice);
+        rgPayment           = (RadioGroup)  findViewById(R.id.rgPayment) ;
 
         store               = (Store)           storeRepo.findById(store_id);
         route               = (Route)           routeRepo.findById(store.getRoute_id());
@@ -164,7 +168,6 @@ public class DistributorsActivity extends AppCompatActivity {
         product             = (Product)         productRepo.findById(product_id);
 
         visit_id= store.getVisit_id();
-
 
         tvStoreFullName.setText(String.valueOf(store.getFullname()));
         tvStoreId.setText(String.valueOf(store.getId()));
@@ -211,7 +214,6 @@ public class DistributorsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int counterSelected =0;
                 if(radioButtonArray != null) {
-
                     for(RadioButton r:radioButtonArray ) {
                         if(r.isChecked()){
                             selectedOptions=r.getTag().toString();
@@ -223,11 +225,26 @@ public class DistributorsActivity extends AppCompatActivity {
                         return;
                     }
                 }
+                counterSelected =0;
+                if(rbPayment != null) {
+                    for(RadioButton r:rbPayment ) {
+                        if(r.isChecked()){
+                            selectedOptionsPayment=r.getTag().toString();
+                            counterSelected ++;
+                        }
+                    }
+                    if(counterSelected==0){
+                        Toast.makeText(activity, R.string.message_select_options_payment, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("store_id", Integer.valueOf(store_id));
                 bundle.putInt("audit_id", Integer.valueOf(audit_id));
                 bundle.putInt("distributor_id", Integer.valueOf(selectedOptions));
+                bundle.putInt("distributor_id", Integer.valueOf(selectedOptions));
+                bundle.putInt("selectedOptionsPayment", Integer.valueOf(selectedOptionsPayment));
                 Intent intent = new Intent(activity,ProductCompetityActivity.class);
                 intent.putExtras(bundle);
                 activity.startActivity(intent);
@@ -252,6 +269,7 @@ public class DistributorsActivity extends AppCompatActivity {
         showToolbar(auditRoadStore.getList().getFullname().toString(),false);
 
         loadDistributorControls();
+        loadPaymentControls();
 
     }
 
@@ -303,6 +321,28 @@ public class DistributorsActivity extends AppCompatActivity {
             lyOptions.addView(radioGroup);
 
         }
+    }
+
+    private void loadPaymentControls(){
+        rbPayment = new RadioButton[2];
+
+        rbPayment[0] = new RadioButton(activity);
+        rbPayment[0].setText(getString(R.string.text_pyment_contado));
+        rbPayment[0].setTag(1);
+        rgPayment.addView(rbPayment[0]);
+//        rbPayment[counter].setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
+
+        rbPayment[1] = new RadioButton(activity);
+        rbPayment[1].setText(getString(R.string.text_pyment_credito));
+        rbPayment[1].setTag(0);
+        rgPayment.addView(rbPayment[1]);
+
+
+
     }
 
 

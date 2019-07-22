@@ -29,7 +29,7 @@
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
-                android:text="@string/text_material_pop"
+                android:text="@string/text_competity"
                 android:textColor="@color/colorPrimaryDark" />
             <LinearLayout
                 android:layout_width="match_parent"

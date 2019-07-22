@@ -55,8 +55,10 @@ import com.dataservicios.ttauditbayertransferencista.repo.StockProductPopRepo;
 import com.dataservicios.ttauditbayertransferencista.repo.UserRepo;
 import com.dataservicios.ttauditbayertransferencista.util.BitmapLoader;
 import com.dataservicios.ttauditbayertransferencista.util.GPSTracker;
+import com.dataservicios.ttauditbayertransferencista.util.GlobalConstant;
 import com.dataservicios.ttauditbayertransferencista.util.SessionManager;
 import com.dataservicios.ttauditbayertransferencista.util.SyncData;
+import com.dataservicios.ttauditbayertransferencista.view.SearchOrdersActivity;
 import com.dataservicios.ttauditbayertransferencista.view.fragment.MediasFragment;
 import com.dataservicios.ttauditbayertransferencista.view.fragment.RouteFragment;
 import com.squareup.picasso.Picasso;
@@ -156,11 +158,16 @@ public class PanelAdminActivity extends AppCompatActivity {
 
         tvUser.setText(user.getEmail());
         tvCampaign.setText(company.getFullname());
-
-        Picasso.with(activity)
-                .load(user.getImage())
-                .error(R.drawable.avataruser)
+        Picasso.get()
+                .load(GlobalConstant.URL_USER_IMAGES + user.getImage())
+                .placeholder(R.drawable.loading_image)
+                .error(R.drawable.thumbs_ttaudit)
                 .into(imgPhoto);
+
+//        Picasso.with(activity)
+//                .load(user.getImage())
+//                .error(R.drawable.avataruser)
+//                .into(imgPhoto);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +192,7 @@ public class PanelAdminActivity extends AppCompatActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId( 3 , -1), true , "0"));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId( 4 , -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId( 5 , -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId( 6 , -1)));
 
         navMenuIcons.recycle();
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
@@ -411,7 +419,7 @@ public class PanelAdminActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(activity,R.string.message_app_no_installing, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("market://details?id=com.estrongs.android.pop&hl=es"));
+                    intent.setData(Uri.parse(GlobalConstant.MARKET_OPEN_APP_ESFILEEXPLORE));
                     startActivity(intent);
                 }finally {
 
@@ -506,8 +514,17 @@ public class PanelAdminActivity extends AppCompatActivity {
                 builder.setCancelable(false);
                 break;
 
+            case 6:
+
+                Intent intent = new Intent(activity,SearchOrdersActivity.class);
+                startActivity(intent);
+
+                break;
+
             default:
                 break;
+
+
         }
 
         if (fragment != null) {

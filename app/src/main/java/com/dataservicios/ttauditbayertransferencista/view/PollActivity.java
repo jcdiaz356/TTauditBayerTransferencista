@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PollActivity extends AppCompatActivity {
-    private static final String LOG_TAG = StoreAuditActivity.class.getSimpleName();
+    private static final String LOG_TAG = PollActivity.class.getSimpleName();
     private SessionManager          session;
     private Activity                activity =  this;
     private ProgressDialog          pDialog;
@@ -99,7 +99,7 @@ public class PollActivity extends AppCompatActivity {
      * @param company_id
      * @param audit_id
      * @param poll Objeti tipo poll
-     */
+     **/
     public static void createInstance(Activity activity, int company_id, int audit_id, Poll poll) {
         Intent intent = getLaunchIntent(activity, company_id,audit_id,poll);
         activity.startActivity(intent);
@@ -280,15 +280,30 @@ public class PollActivity extends AppCompatActivity {
 
     }
 
+//    private void takePhoto() {
+//
+//        Media media = new Media();
+//        media.setStore_id(store_id);
+//        media.setPoll_id(poll.getId());
+//        media.setCompany_id(company_id);
+//        media.setVisit_id(store.getVisit_id());
+//        media.setType(1);
+//        AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
+//    }
+
     private void takePhoto() {
 
-        Media media = new Media();
-        media.setStore_id(store_id);
-        media.setPoll_id(poll.getId());
-        media.setCompany_id(company_id);
-        media.setVisit_id(store.getVisit_id());
-        media.setType(1);
-        AndroidCustomGalleryActivity.createInstance((Activity) activity, media);
+        Intent intent = new Intent(activity, AndroidCustomGalleryActivity.class);
+        intent.putExtra("store_id"              ,store_id);
+        intent.putExtra("poll_id"               ,poll.getId());
+        intent.putExtra("company_id"            ,company_id);
+        intent.putExtra("publicities_id"        ,publicity_id);
+        intent.putExtra("product_id"            ,product_id);
+        intent.putExtra("category_product_id"   ,category_product_id);
+        intent.putExtra("monto"                 ,"");
+        intent.putExtra("razon_social"          ,"");
+        intent.putExtra("tipo"                  ,1);
+        startActivity(intent);
     }
 
 
@@ -368,18 +383,25 @@ public class PollActivity extends AppCompatActivity {
                     if (!AuditUtil.insertPollDetail(pollDetail)) return false;
                     if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
                 } else if (isYesNo == 0) {
-                    if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                    if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
-                    if (!AuditUtil.closeAllAuditRoadStore(store_id, company_id)) return false;
+
+                    if( store.getChanel().equals("TRADICIONAL") ){
+                        if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+                        if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
+                        if (!AuditUtil.closeAllAuditRoadStore(store_id, company_id,route.getId())) return false;
+                    } else if(store.getChanel().equals("MODERNO") || store.getChanel().equals("CADENA")) {
+
+                        if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+                        if (!AuditUtil.closeAllAuditRoadStore(store_id, company_id,route.getId())) return false;
+                    }
                 }
                 break;
-            case 2: case 3:
-                if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                break;
-            case 4:
-                if (!AuditUtil.insertPollDetail(pollDetail)) return false;
-                if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
-                break;
+//            case 2: case 3:
+//                if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+//                break;
+//            case 4:
+//                if (!AuditUtil.insertPollDetail(pollDetail)) return false;
+//                if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
+//                break;
             case 5:
                 if (!AuditUtil.insertPollDetail(pollDetail)) return false;
                 break;
@@ -387,13 +409,13 @@ public class PollActivity extends AppCompatActivity {
                 if (!AuditUtil.insertPollDetail(pollDetail)) return false;
                 if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
                 break;
-            case 7: case 12: case 13:
+            case 7: case 12: case 13: case 15: case 16:
                 if (!AuditUtil.insertPollDetail(pollDetail)) return false;
                 break;
              case 14:
                 if (!AuditUtil.insertPollDetail(pollDetail)) return false;
                 if (!AuditUtil.closeAuditStore(audit_id, store_id, company_id, route.getId())) return false;
-                if (!AuditUtil.closeAllAuditRoadStore(store_id, company_id)) return false;
+                if (!AuditUtil.closeAllAuditRoadStore(store_id, company_id,route.getId())) return false;
                 break;
         }
         return true;
@@ -409,46 +431,93 @@ public class PollActivity extends AppCompatActivity {
             case 1:
 
                 if(isYesNo==1) {
-                    auditRoadStore.setAuditStatus(1);
-                    auditRoadStoreRepo.update(auditRoadStore);
-                    finish();
+
+
+                    if( store.getChanel().equals("TRADICIONAL") ){
+                        auditRoadStore.setAuditStatus(1);
+                        auditRoadStoreRepo.update(auditRoadStore);
+                        finish();
+                    } else if(store.getChanel().equals("MODERNO") || store.getChanel().equals("CADENA")) {
+//                        Poll poll = new Poll();
+//                        poll.setOrder(2);
+//                        PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
+                        auditRoadStore.setAuditStatus(1);
+                        auditRoadStoreRepo.update(auditRoadStore);
+                        finish();
+                    }
                 } else if(isYesNo==0){
-//                    ArrayList<AuditRoadStore> auditRoadStores = (ArrayList<AuditRoadStore>) auditRoadStoreRepo.findByStoreId(store_id);
-//                    for (AuditRoadStore m: auditRoadStores){
-//                        m.setAuditStatus(1);
-//                        auditRoadStoreRepo.update(m);
-//                    }
-                    auditRoadStore.setAuditStatus(1);
-                    auditRoadStoreRepo.update(auditRoadStore);
+                    ArrayList<AuditRoadStore> auditRoadStores = (ArrayList<AuditRoadStore>) auditRoadStoreRepo.findByStoreId(store_id);
+                    for (AuditRoadStore m: auditRoadStores){
+                        m.setAuditStatus(1);
+                        auditRoadStoreRepo.update(m);
+                    }
                     finish();
+//                    auditRoadStore.setAuditStatus(1);
+//                    auditRoadStoreRepo.update(auditRoadStore);
+//                    finish();
                 }
                 break;
-            case 2: case 3:
+//            case 2: case 3:
+//                poll.setOrder(orderPoll + 1);
+//                PollActivity.createInstance(activity, store_id,audit_id,poll);
+//                finish();
+//                break;
+//            case 4:
+//                auditRoadStore.setAuditStatus(1);
+//                auditRoadStoreRepo.update(auditRoadStore);
+//                finish();
+//                break;
+            case 5:
+
                 poll.setOrder(orderPoll + 1);
                 PollActivity.createInstance(activity, store_id,audit_id,poll);
                 finish();
                 break;
-            case 4:
-                auditRoadStore.setAuditStatus(1);
-                auditRoadStoreRepo.update(auditRoadStore);
-                finish();
-                break;
-            case 5:
-
-                    poll.setOrder(orderPoll + 1);
-                    PollActivity.createInstance(activity, store_id,audit_id,poll);
-                    finish();
-                    break;
-
 
             case 6:
                 auditRoadStore.setAuditStatus(1);
                 auditRoadStoreRepo.update(auditRoadStore);
                 finish();
                 break;
+
             case 7:
 
+
+//                if(isYesNo==1) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt("store_id", Integer.valueOf(store_id));
+//                    bundle.putInt("audit_id", Integer.valueOf(audit_id));
+//                    Intent intent = new Intent(activity,DistributorsActivity.class);
+//                    intent.putExtras(bundle);
+//                    activity.startActivity(intent);
+//                    finish();
+//                } else if(isYesNo==0){
+//                    poll.setOrder(12);
+//                    PollActivity.createInstance(activity, store_id,audit_id,poll);
+//                    finish();
+//                }
+//                break;
+
                 if(isYesNo==1) {
+                    poll.setOrder(15);
+                    PollActivity.createInstance(activity, store_id,audit_id,poll);
+                    finish();
+                } else if(isYesNo==0){
+                    poll.setOrder(12);
+                    PollActivity.createInstance(activity, store_id,audit_id,poll);
+                    finish();
+                }
+                break;
+
+            case 15:
+
+                poll.setOrder(orderPoll + 1);
+                PollActivity.createInstance(activity, store_id,audit_id,poll);
+                finish();
+                break;
+            case 16:
+
+//                if(isYesNo==1) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("store_id", Integer.valueOf(store_id));
                     bundle.putInt("audit_id", Integer.valueOf(audit_id));
@@ -456,11 +525,11 @@ public class PollActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     activity.startActivity(intent);
                     finish();
-                } else if(isYesNo==0){
-                    poll.setOrder(12);
-                    PollActivity.createInstance(activity, store_id,audit_id,poll);
-                    finish();
-                }
+//                } else if(isYesNo==0){
+//                    poll.setOrder(12);
+//                    PollActivity.createInstance(activity, store_id,audit_id,poll);
+//                    finish();
+//                }
                 break;
 
             case 12:
@@ -522,6 +591,18 @@ public class PollActivity extends AppCompatActivity {
             case 6: case 12:
 //                if(poll.getMedia() == 1)  btPhoto.setVisibility(View.VISIBLE); else btPhoto.setVisibility(View.INVISIBLE);
 //                if(poll.getComment() == 1) showCommentControl(true); else showCommentControl(false);
+
+                showPollOptionsControl(true);
+                break;
+            case 16:
+//                if(poll.getMedia() == 1)  btPhoto.setVisibility(View.VISIBLE); else btPhoto.setVisibility(View.INVISIBLE);
+                showCommentControl(false,0);
+                swYesNo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) showCommentControl(true,0); else showCommentControl(false,0);
+                    }
+                });
 
                 showPollOptionsControl(true);
                 break;
@@ -628,7 +709,7 @@ public class PollActivity extends AppCompatActivity {
        // alertDialogBasico(getString(R.string.message_audit_init) );
         //super.onBackPressed();
 
-        if (poll.getOrder() == 1){
+        if (poll.getOrder() == 1 || poll.getOrder() == 2 ){
             alertDialog(getString(R.string.message_audit_init),1 );
         } else {
             alertDialog(getString(R.string.message_audit_init), 0);

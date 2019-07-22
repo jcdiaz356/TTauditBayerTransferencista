@@ -71,10 +71,10 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap             mMap;
     private Activity activity =  this;
     private ProgressDialog pDialog;
-    private TextView tvRouteFullName,tvRouteId,tvStoreFullName,tvStoreId,tvAddress ,tvReferencia,tvDistrict,tvType ;
+    private TextView tvRouteFullName,tvRouteId,tvStoreFullName,tvStoreId,tvAddress ,tvReferencia,tvDistrict,tvType,tvCredito ;
     private Button btSaveGeo;
     private Button btcloseRouteStore;
-    private ImageButton ibEditAddress;
+    private ImageButton ibEditAddress,ibAniversary,ibContact,ibCredit;
     private ImageButton imgAuditStore;
     private int                   user_id;
     private int                   store_id;
@@ -132,10 +132,14 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
         tvReferencia        = (TextView) findViewById(R.id.tvReferencia) ;
         tvDistrict          = (TextView) findViewById(R.id.tvDistrict) ;
         tvType              = (TextView) findViewById(R.id.tvType) ;
+        tvCredito              = (TextView) findViewById(R.id.tvCredito) ;
         btSaveGeo           = (Button)   findViewById(R.id.btSaveGeo);
         btcloseRouteStore   = (Button)   findViewById(R.id.btcloseRouteStore);
         ibEditAddress       = (ImageButton) findViewById(R.id.ibEditAddress);
         imgAuditStore       = (ImageButton) findViewById(R.id.imgAuditStore);
+        ibCredit            = (ImageButton) findViewById(R.id.ibCredit);
+        ibContact           = (ImageButton) findViewById(R.id.ibContact);
+        ibAniversary       = (ImageButton) findViewById(R.id.ibAniversary);
 
 
         store = (Store) storeRepo.findById(store_id); ////////////////////////////
@@ -149,6 +153,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
         tvReferencia.setText(String.valueOf(store.getUrbanization()));
         tvDistrict.setText(String.valueOf(store.getDistrict()));
         tvType.setText(String.valueOf(store.getChanel()) + " (" + store.getCadenRuc() + ")");
+        tvCredito.setText(String.valueOf(store.getOwner()));
 
         ibEditAddress.setVisibility(View.VISIBLE);
         ibEditAddress.setOnClickListener(new View.OnClickListener() {
@@ -164,6 +169,38 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
+        ibAniversary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle  =  new Bundle();
+                bundle.putInt("store_id",store.getId());
+                Intent intent = new Intent(activity,AniversaryStoreActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        ibContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle  =  new Bundle();
+                bundle.putInt("store_id",store.getId());
+                Intent intent = new Intent(activity,ContactsActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        ibCredit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle  =  new Bundle();
+                bundle.putInt("store_id",store.getId());
+                Intent intent = new Intent(activity,CreditLineActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
         imgAuditStore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,6 +308,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
                         bundle.putInt("store_id", Integer.valueOf(store_id));
                         bundle.putInt("audit_id", Integer.valueOf(audit_id));
                         Intent intent = new Intent(activity,PublicitiesActivity.class);
+//                        Intent intent = new Intent(activity,CompetityActivity.class);
                         intent.putExtras(bundle);
                         activity.startActivity(intent);
 
@@ -360,7 +398,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
                         Audit audit = (Audit) auditRepo.findById(audit_id);
                         audit.getCompany_audit_id();
 
-                        if( store.getChanel().equals("TRADICIONAL") ){
+                        if( store.getChanel().equals("TRADICIONAL") || store.getChanel().equals("TOP") ){
 //                            Poll poll = new Poll();
 //                            poll.setOrder(1);
 //                            PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
@@ -374,7 +412,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
 
                         } else if(store.getChanel().equals("MODERNO") || store.getChanel().equals("CADENA")) {
                             Poll poll = new Poll();
-                            poll.setOrder(2);
+                            poll.setOrder(1);
                             PollActivity.createInstance((Activity) activity, store_id,audit_id,poll);
                         }
 
@@ -383,7 +421,7 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
             });
 
 
-            if( store.getChanel().equals("TRADICIONAL") ){
+            if( store.getChanel().equals("TRADICIONAL") || store.getChanel().equals("TOP")  ){
                 if(ar.getList().getId()  == 64) {
                     buttonArray[i].setVisibility(View.GONE);
                 } else if(ar.getList().getId()  == 66) {
@@ -394,6 +432,10 @@ public class StoreAuditActivity extends AppCompatActivity implements OnMapReadyC
                 if(ar.getList().getId()  == 65) {
                     buttonArray[i].setVisibility(View.GONE);
                 }
+            }
+
+            if (ar.getAudit_id()== 64  ){
+                buttonArray[i].setVisibility(View.GONE);
             }
 //            ------------------------------------------------------------
 //            Deshabilitando temporalmente Auditoría 66 de competencias

@@ -221,12 +221,47 @@ public class ProductPlanFidelizacionActivity extends AppCompatActivity {
 //                para cargar con los nuevos datos estableciendo el stock minimo
 //                y estok maximo a cero pra cargarlo despues con nuevos valores
 //                ---------------------------------------------------------------
+
+
+
+                for( int i = 0 ; i < productPlanSales.size() ; i++) {
+                    if (productPlanSales.get(i).getProduct_id()== 715) {
+                        productPlanSales.remove(i);
+                    }
+//                    if (productPlanSales.get(i).getProduct_id()== 716) {
+//                        productPlanSales.remove(i);
+//                    }
+//                    if (productPlanSales.get(i).getProduct_id()== 749) {
+//                        productPlanSales.remove(i);
+//                    }
+//                    if (productPlanSales.get(i).getProduct_id()== 888) {
+//                        productPlanSales.remove(i);
+//                    }
+                }
+                for( int i = 0 ; i < productPlanSales.size() ; i++) {
+                    if (productPlanSales.get(i).getProduct_id()== 716) {
+                        productPlanSales.remove(i);
+                    }
+                }
+                for( int i = 0 ; i < productPlanSales.size() ; i++) {
+                    if (productPlanSales.get(i).getProduct_id()== 749) {
+                        productPlanSales.remove(i);
+                    }
+                }
+                for( int i = 0 ; i < productPlanSales.size() ; i++) {
+                    if (productPlanSales.get(i).getProduct_id()== 888) {
+                        productPlanSales.remove(i);
+                    }
+                }
+
                 productPlanSaleRepo.deleteAll();
                 for (ProductPlanSale ps: productPlanSales){
-                        ps.setStock_min(0);
-                        ps.setStock_max(0);
-                        productPlanSaleRepo.create(ps);
+                    ps.setStock_min(0);
+                    ps.setStock_max(0);
+                    productPlanSaleRepo.create(ps);
                 }
+
+                ArrayList<Product> products = (ArrayList<Product>) productRepo.findAll();
 
                 productPlanSaleRecyclerView  = (RecyclerView) findViewById(R.id.product_recycler_view);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
@@ -246,7 +281,7 @@ public class ProductPlanFidelizacionActivity extends AppCompatActivity {
             pDialog.dismiss();
 
 
-            pDialog.dismiss();
+            //pDialog.dismiss();
         }
 
         @Override

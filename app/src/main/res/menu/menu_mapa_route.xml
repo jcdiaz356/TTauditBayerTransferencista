@@ -9,5 +9,4 @@
         android:id="@+id/action_location_all"
         android:icon="@drawable/ic_location_all"
         android:title="@string/action_location_all"/>
-
 </menu>

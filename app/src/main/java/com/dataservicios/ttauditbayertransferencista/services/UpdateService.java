@@ -56,7 +56,7 @@ public class UpdateService extends Service {
         super.onDestroy();
 
         runFlag = false;
-        application.setServiceRunningFlag(false);
+    //    application.setServiceRunningFlag(false);
         updater.interrupt();
         updater = null;
         Log.d(TAG, "onDestroyed");
@@ -66,7 +66,7 @@ public class UpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(!runFlag){
             runFlag = true;
-            application.setServiceRunningFlag(true);
+        //    application.setServiceRunningFlag(true);
             updater.start();
         }
 
@@ -94,11 +94,11 @@ public class UpdateService extends Service {
                             Log.i(TAG," Conexión rápida" );
                             if (mediaRepo.countReg() >0 ) {
                                 media = (Media) mediaRepo.findFirstReg();
-                                boolean response = auditUtil.uploadMedia(media,1);
-                                if (response) {
-                                    mediaRepo.delete(media);
-                                    Log.i(TAG," Send success images database server and delete local database and file " );
-                                }
+                            //    boolean response = auditUtil.uploadMedia(media,1);
+//                                if (response) {
+//                                    mediaRepo.delete(media);
+//                                    Log.i(TAG," Send success images database server and delete local database and file " );
+//                                }
                             } else{
                                 Log.i(TAG, "No found records in media table for send");
                             }
@@ -112,7 +112,7 @@ public class UpdateService extends Service {
                     Thread.sleep(DELAY);
                 }catch(InterruptedException e){
                     updaterService.runFlag = false;
-                    application.setServiceRunningFlag(true);
+                  //  application.setServiceRunningFlag(true);
                 }
 
             }
